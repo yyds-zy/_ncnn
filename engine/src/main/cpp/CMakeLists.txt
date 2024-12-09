@@ -21,7 +21,8 @@ file(GLOB jni_srcs
         "*.cpp"
         "detection/*.cpp"
         "live/*.cpp"
-        "mtcnn/*.cpp"
+        "age/*.cpp"
+        "face/*.cpp"
     )
 
 add_library(engine SHARED ${jni_srcs})

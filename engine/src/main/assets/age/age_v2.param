@@ -1,0 +1,257 @@
+7767517
+255 287
+Input            input.1                  0 1 input.1
+MemoryData       /Constant_output_0       0 1 /Constant_output_0 0=70
+Convolution      /model/layer0/conv1/Conv 1 1 input.1 /model/layer0/conv1/Conv_output_0 0=64 1=7 11=7 2=1 12=1 3=2 13=2 4=3 14=3 15=3 16=3 5=1 6=9408
+ReLU             /model/layer0/relu1/Relu 1 1 /model/layer0/conv1/Conv_output_0 /model/layer0/relu1/Relu_output_0
+Pooling          /model/layer0/pool/MaxPool 1 1 /model/layer0/relu1/Relu_output_0 /model/layer0/pool/MaxPool_output_0 0=0 1=3 11=3 2=2 12=2 3=0 13=0 14=0 15=0 5=0
+Split            splitncnn_0              1 2 /model/layer0/pool/MaxPool_output_0 /model/layer0/pool/MaxPool_output_0_splitncnn_0 /model/layer0/pool/MaxPool_output_0_splitncnn_1
+Convolution      /model/layer1/layer1.0/conv1/Conv 1 1 /model/layer0/pool/MaxPool_output_0_splitncnn_1 /model/layer1/layer1.0/conv1/Conv_output_0 0=128 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=8192
+ReLU             /model/layer1/layer1.0/relu/Relu 1 1 /model/layer1/layer1.0/conv1/Conv_output_0 /model/layer1/layer1.0/relu/Relu_output_0
+ConvolutionDepthWise /model/layer1/layer1.0/conv2/Conv 1 1 /model/layer1/layer1.0/relu/Relu_output_0 /model/layer1/layer1.0/conv2/Conv_output_0 0=128 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=4608 7=32
+ReLU             /model/layer1/layer1.0/relu_1/Relu 1 1 /model/layer1/layer1.0/conv2/Conv_output_0 /model/layer1/layer1.0/relu_1/Relu_output_0
+Convolution      /model/layer1/layer1.0/conv3/Conv 1 1 /model/layer1/layer1.0/relu_1/Relu_output_0 /model/layer1/layer1.0/conv3/Conv_output_0 0=256 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=32768
+Split            splitncnn_1              1 2 /model/layer1/layer1.0/conv3/Conv_output_0 /model/layer1/layer1.0/conv3/Conv_output_0_splitncnn_0 /model/layer1/layer1.0/conv3/Conv_output_0_splitncnn_1
+Convolution      /model/layer1/layer1.0/downsample/downsample.0/Conv 1 1 /model/layer0/pool/MaxPool_output_0_splitncnn_0 /model/layer1/layer1.0/downsample/downsample.0/Conv_output_0 0=256 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=16384
+Pooling          /model/layer1/layer1.0/se_module/avg_pool/GlobalAveragePool 1 1 /model/layer1/layer1.0/conv3/Conv_output_0_splitncnn_1 /model/layer1/layer1.0/se_module/avg_pool/GlobalAveragePool_output_0 0=1 4=1
+Convolution      /model/layer1/layer1.0/se_module/fc1/Conv 1 1 /model/layer1/layer1.0/se_module/avg_pool/GlobalAveragePool_output_0 /model/layer1/layer1.0/se_module/fc1/Conv_output_0 0=16 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=4096
+ReLU             /model/layer1/layer1.0/se_module/relu/Relu 1 1 /model/layer1/layer1.0/se_module/fc1/Conv_output_0 /model/layer1/layer1.0/se_module/relu/Relu_output_0
+Convolution      /model/layer1/layer1.0/se_module/fc2/Conv 1 1 /model/layer1/layer1.0/se_module/relu/Relu_output_0 /model/layer1/layer1.0/se_module/fc2/Conv_output_0 0=256 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=4096
+Sigmoid          /model/layer1/layer1.0/se_module/sigmoid/Sigmoid 1 1 /model/layer1/layer1.0/se_module/fc2/Conv_output_0 /model/layer1/layer1.0/se_module/sigmoid/Sigmoid_output_0
+BinaryOp         /model/layer1/layer1.0/se_module/Mul 2 1 /model/layer1/layer1.0/conv3/Conv_output_0_splitncnn_0 /model/layer1/layer1.0/se_module/sigmoid/Sigmoid_output_0 /model/layer1/layer1.0/se_module/Mul_output_0 0=2
+BinaryOp         /model/layer1/layer1.0/Add 2 1 /model/layer1/layer1.0/se_module/Mul_output_0 /model/layer1/layer1.0/downsample/downsample.0/Conv_output_0 /model/layer1/layer1.0/Add_output_0 0=0
+ReLU             /model/layer1/layer1.0/relu_2/Relu 1 1 /model/layer1/layer1.0/Add_output_0 /model/layer1/layer1.0/relu_2/Relu_output_0
+Split            splitncnn_2              1 2 /model/layer1/layer1.0/relu_2/Relu_output_0 /model/layer1/layer1.0/relu_2/Relu_output_0_splitncnn_0 /model/layer1/layer1.0/relu_2/Relu_output_0_splitncnn_1
+Convolution      /model/layer1/layer1.1/conv1/Conv 1 1 /model/layer1/layer1.0/relu_2/Relu_output_0_splitncnn_1 /model/layer1/layer1.1/conv1/Conv_output_0 0=128 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=32768
+ReLU             /model/layer1/layer1.1/relu/Relu 1 1 /model/layer1/layer1.1/conv1/Conv_output_0 /model/layer1/layer1.1/relu/Relu_output_0
+ConvolutionDepthWise /model/layer1/layer1.1/conv2/Conv 1 1 /model/layer1/layer1.1/relu/Relu_output_0 /model/layer1/layer1.1/conv2/Conv_output_0 0=128 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=4608 7=32
+ReLU             /model/layer1/layer1.1/relu_1/Relu 1 1 /model/layer1/layer1.1/conv2/Conv_output_0 /model/layer1/layer1.1/relu_1/Relu_output_0
+Convolution      /model/layer1/layer1.1/conv3/Conv 1 1 /model/layer1/layer1.1/relu_1/Relu_output_0 /model/layer1/layer1.1/conv3/Conv_output_0 0=256 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=32768
+Split            splitncnn_3              1 2 /model/layer1/layer1.1/conv3/Conv_output_0 /model/layer1/layer1.1/conv3/Conv_output_0_splitncnn_0 /model/layer1/layer1.1/conv3/Conv_output_0_splitncnn_1
+Pooling          /model/layer1/layer1.1/se_module/avg_pool/GlobalAveragePool 1 1 /model/layer1/layer1.1/conv3/Conv_output_0_splitncnn_1 /model/layer1/layer1.1/se_module/avg_pool/GlobalAveragePool_output_0 0=1 4=1
+Convolution      /model/layer1/layer1.1/se_module/fc1/Conv 1 1 /model/layer1/layer1.1/se_module/avg_pool/GlobalAveragePool_output_0 /model/layer1/layer1.1/se_module/fc1/Conv_output_0 0=16 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=4096
+ReLU             /model/layer1/layer1.1/se_module/relu/Relu 1 1 /model/layer1/layer1.1/se_module/fc1/Conv_output_0 /model/layer1/layer1.1/se_module/relu/Relu_output_0
+Convolution      /model/layer1/layer1.1/se_module/fc2/Conv 1 1 /model/layer1/layer1.1/se_module/relu/Relu_output_0 /model/layer1/layer1.1/se_module/fc2/Conv_output_0 0=256 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=4096
+Sigmoid          /model/layer1/layer1.1/se_module/sigmoid/Sigmoid 1 1 /model/layer1/layer1.1/se_module/fc2/Conv_output_0 /model/layer1/layer1.1/se_module/sigmoid/Sigmoid_output_0
+BinaryOp         /model/layer1/layer1.1/se_module/Mul 2 1 /model/layer1/layer1.1/conv3/Conv_output_0_splitncnn_0 /model/layer1/layer1.1/se_module/sigmoid/Sigmoid_output_0 /model/layer1/layer1.1/se_module/Mul_output_0 0=2
+BinaryOp         /model/layer1/layer1.1/Add 2 1 /model/layer1/layer1.1/se_module/Mul_output_0 /model/layer1/layer1.0/relu_2/Relu_output_0_splitncnn_0 /model/layer1/layer1.1/Add_output_0 0=0
+ReLU             /model/layer1/layer1.1/relu_2/Relu 1 1 /model/layer1/layer1.1/Add_output_0 /model/layer1/layer1.1/relu_2/Relu_output_0
+Split            splitncnn_4              1 2 /model/layer1/layer1.1/relu_2/Relu_output_0 /model/layer1/layer1.1/relu_2/Relu_output_0_splitncnn_0 /model/layer1/layer1.1/relu_2/Relu_output_0_splitncnn_1
+Convolution      /model/layer1/layer1.2/conv1/Conv 1 1 /model/layer1/layer1.1/relu_2/Relu_output_0_splitncnn_1 /model/layer1/layer1.2/conv1/Conv_output_0 0=128 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=32768
+ReLU             /model/layer1/layer1.2/relu/Relu 1 1 /model/layer1/layer1.2/conv1/Conv_output_0 /model/layer1/layer1.2/relu/Relu_output_0
+ConvolutionDepthWise /model/layer1/layer1.2/conv2/Conv 1 1 /model/layer1/layer1.2/relu/Relu_output_0 /model/layer1/layer1.2/conv2/Conv_output_0 0=128 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=4608 7=32
+ReLU             /model/layer1/layer1.2/relu_1/Relu 1 1 /model/layer1/layer1.2/conv2/Conv_output_0 /model/layer1/layer1.2/relu_1/Relu_output_0
+Convolution      /model/layer1/layer1.2/conv3/Conv 1 1 /model/layer1/layer1.2/relu_1/Relu_output_0 /model/layer1/layer1.2/conv3/Conv_output_0 0=256 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=32768
+Split            splitncnn_5              1 2 /model/layer1/layer1.2/conv3/Conv_output_0 /model/layer1/layer1.2/conv3/Conv_output_0_splitncnn_0 /model/layer1/layer1.2/conv3/Conv_output_0_splitncnn_1
+Pooling          /model/layer1/layer1.2/se_module/avg_pool/GlobalAveragePool 1 1 /model/layer1/layer1.2/conv3/Conv_output_0_splitncnn_1 /model/layer1/layer1.2/se_module/avg_pool/GlobalAveragePool_output_0 0=1 4=1
+Convolution      /model/layer1/layer1.2/se_module/fc1/Conv 1 1 /model/layer1/layer1.2/se_module/avg_pool/GlobalAveragePool_output_0 /model/layer1/layer1.2/se_module/fc1/Conv_output_0 0=16 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=4096
+ReLU             /model/layer1/layer1.2/se_module/relu/Relu 1 1 /model/layer1/layer1.2/se_module/fc1/Conv_output_0 /model/layer1/layer1.2/se_module/relu/Relu_output_0
+Convolution      /model/layer1/layer1.2/se_module/fc2/Conv 1 1 /model/layer1/layer1.2/se_module/relu/Relu_output_0 /model/layer1/layer1.2/se_module/fc2/Conv_output_0 0=256 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=4096
+Sigmoid          /model/layer1/layer1.2/se_module/sigmoid/Sigmoid 1 1 /model/layer1/layer1.2/se_module/fc2/Conv_output_0 /model/layer1/layer1.2/se_module/sigmoid/Sigmoid_output_0
+BinaryOp         /model/layer1/layer1.2/se_module/Mul 2 1 /model/layer1/layer1.2/conv3/Conv_output_0_splitncnn_0 /model/layer1/layer1.2/se_module/sigmoid/Sigmoid_output_0 /model/layer1/layer1.2/se_module/Mul_output_0 0=2
+BinaryOp         /model/layer1/layer1.2/Add 2 1 /model/layer1/layer1.2/se_module/Mul_output_0 /model/layer1/layer1.1/relu_2/Relu_output_0_splitncnn_0 /model/layer1/layer1.2/Add_output_0 0=0
+ReLU             /model/layer1/layer1.2/relu_2/Relu 1 1 /model/layer1/layer1.2/Add_output_0 /model/layer1/layer1.2/relu_2/Relu_output_0
+Split            splitncnn_6              1 2 /model/layer1/layer1.2/relu_2/Relu_output_0 /model/layer1/layer1.2/relu_2/Relu_output_0_splitncnn_0 /model/layer1/layer1.2/relu_2/Relu_output_0_splitncnn_1
+Convolution      /model/layer2/layer2.0/conv1/Conv 1 1 /model/layer1/layer1.2/relu_2/Relu_output_0_splitncnn_1 /model/layer2/layer2.0/conv1/Conv_output_0 0=256 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=65536
+ReLU             /model/layer2/layer2.0/relu/Relu 1 1 /model/layer2/layer2.0/conv1/Conv_output_0 /model/layer2/layer2.0/relu/Relu_output_0
+ConvolutionDepthWise /model/layer2/layer2.0/conv2/Conv 1 1 /model/layer2/layer2.0/relu/Relu_output_0 /model/layer2/layer2.0/conv2/Conv_output_0 0=256 1=3 11=3 2=1 12=1 3=2 13=2 4=1 14=1 15=1 16=1 5=1 6=18432 7=32
+ReLU             /model/layer2/layer2.0/relu_1/Relu 1 1 /model/layer2/layer2.0/conv2/Conv_output_0 /model/layer2/layer2.0/relu_1/Relu_output_0
+Convolution      /model/layer2/layer2.0/conv3/Conv 1 1 /model/layer2/layer2.0/relu_1/Relu_output_0 /model/layer2/layer2.0/conv3/Conv_output_0 0=512 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=131072
+Split            splitncnn_7              1 2 /model/layer2/layer2.0/conv3/Conv_output_0 /model/layer2/layer2.0/conv3/Conv_output_0_splitncnn_0 /model/layer2/layer2.0/conv3/Conv_output_0_splitncnn_1
+Convolution      /model/layer2/layer2.0/downsample/downsample.0/Conv 1 1 /model/layer1/layer1.2/relu_2/Relu_output_0_splitncnn_0 /model/layer2/layer2.0/downsample/downsample.0/Conv_output_0 0=512 1=1 11=1 2=1 12=1 3=2 13=2 4=0 14=0 15=0 16=0 5=1 6=131072
+Pooling          /model/layer2/layer2.0/se_module/avg_pool/GlobalAveragePool 1 1 /model/layer2/layer2.0/conv3/Conv_output_0_splitncnn_1 /model/layer2/layer2.0/se_module/avg_pool/GlobalAveragePool_output_0 0=1 4=1
+Convolution      /model/layer2/layer2.0/se_module/fc1/Conv 1 1 /model/layer2/layer2.0/se_module/avg_pool/GlobalAveragePool_output_0 /model/layer2/layer2.0/se_module/fc1/Conv_output_0 0=32 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=16384
+ReLU             /model/layer2/layer2.0/se_module/relu/Relu 1 1 /model/layer2/layer2.0/se_module/fc1/Conv_output_0 /model/layer2/layer2.0/se_module/relu/Relu_output_0
+Convolution      /model/layer2/layer2.0/se_module/fc2/Conv 1 1 /model/layer2/layer2.0/se_module/relu/Relu_output_0 /model/layer2/layer2.0/se_module/fc2/Conv_output_0 0=512 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=16384
+Sigmoid          /model/layer2/layer2.0/se_module/sigmoid/Sigmoid 1 1 /model/layer2/layer2.0/se_module/fc2/Conv_output_0 /model/layer2/layer2.0/se_module/sigmoid/Sigmoid_output_0
+BinaryOp         /model/layer2/layer2.0/se_module/Mul 2 1 /model/layer2/layer2.0/conv3/Conv_output_0_splitncnn_0 /model/layer2/layer2.0/se_module/sigmoid/Sigmoid_output_0 /model/layer2/layer2.0/se_module/Mul_output_0 0=2
+BinaryOp         /model/layer2/layer2.0/Add 2 1 /model/layer2/layer2.0/se_module/Mul_output_0 /model/layer2/layer2.0/downsample/downsample.0/Conv_output_0 /model/layer2/layer2.0/Add_output_0 0=0
+ReLU             /model/layer2/layer2.0/relu_2/Relu 1 1 /model/layer2/layer2.0/Add_output_0 /model/layer2/layer2.0/relu_2/Relu_output_0
+Split            splitncnn_8              1 2 /model/layer2/layer2.0/relu_2/Relu_output_0 /model/layer2/layer2.0/relu_2/Relu_output_0_splitncnn_0 /model/layer2/layer2.0/relu_2/Relu_output_0_splitncnn_1
+Convolution      /model/layer2/layer2.1/conv1/Conv 1 1 /model/layer2/layer2.0/relu_2/Relu_output_0_splitncnn_1 /model/layer2/layer2.1/conv1/Conv_output_0 0=256 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=131072
+ReLU             /model/layer2/layer2.1/relu/Relu 1 1 /model/layer2/layer2.1/conv1/Conv_output_0 /model/layer2/layer2.1/relu/Relu_output_0
+ConvolutionDepthWise /model/layer2/layer2.1/conv2/Conv 1 1 /model/layer2/layer2.1/relu/Relu_output_0 /model/layer2/layer2.1/conv2/Conv_output_0 0=256 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=18432 7=32
+ReLU             /model/layer2/layer2.1/relu_1/Relu 1 1 /model/layer2/layer2.1/conv2/Conv_output_0 /model/layer2/layer2.1/relu_1/Relu_output_0
+Convolution      /model/layer2/layer2.1/conv3/Conv 1 1 /model/layer2/layer2.1/relu_1/Relu_output_0 /model/layer2/layer2.1/conv3/Conv_output_0 0=512 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=131072
+Split            splitncnn_9              1 2 /model/layer2/layer2.1/conv3/Conv_output_0 /model/layer2/layer2.1/conv3/Conv_output_0_splitncnn_0 /model/layer2/layer2.1/conv3/Conv_output_0_splitncnn_1
+Pooling          /model/layer2/layer2.1/se_module/avg_pool/GlobalAveragePool 1 1 /model/layer2/layer2.1/conv3/Conv_output_0_splitncnn_1 /model/layer2/layer2.1/se_module/avg_pool/GlobalAveragePool_output_0 0=1 4=1
+Convolution      /model/layer2/layer2.1/se_module/fc1/Conv 1 1 /model/layer2/layer2.1/se_module/avg_pool/GlobalAveragePool_output_0 /model/layer2/layer2.1/se_module/fc1/Conv_output_0 0=32 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=16384
+ReLU             /model/layer2/layer2.1/se_module/relu/Relu 1 1 /model/layer2/layer2.1/se_module/fc1/Conv_output_0 /model/layer2/layer2.1/se_module/relu/Relu_output_0
+Convolution      /model/layer2/layer2.1/se_module/fc2/Conv 1 1 /model/layer2/layer2.1/se_module/relu/Relu_output_0 /model/layer2/layer2.1/se_module/fc2/Conv_output_0 0=512 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=16384
+Sigmoid          /model/layer2/layer2.1/se_module/sigmoid/Sigmoid 1 1 /model/layer2/layer2.1/se_module/fc2/Conv_output_0 /model/layer2/layer2.1/se_module/sigmoid/Sigmoid_output_0
+BinaryOp         /model/layer2/layer2.1/se_module/Mul 2 1 /model/layer2/layer2.1/conv3/Conv_output_0_splitncnn_0 /model/layer2/layer2.1/se_module/sigmoid/Sigmoid_output_0 /model/layer2/layer2.1/se_module/Mul_output_0 0=2
+BinaryOp         /model/layer2/layer2.1/Add 2 1 /model/layer2/layer2.1/se_module/Mul_output_0 /model/layer2/layer2.0/relu_2/Relu_output_0_splitncnn_0 /model/layer2/layer2.1/Add_output_0 0=0
+ReLU             /model/layer2/layer2.1/relu_2/Relu 1 1 /model/layer2/layer2.1/Add_output_0 /model/layer2/layer2.1/relu_2/Relu_output_0
+Split            splitncnn_10             1 2 /model/layer2/layer2.1/relu_2/Relu_output_0 /model/layer2/layer2.1/relu_2/Relu_output_0_splitncnn_0 /model/layer2/layer2.1/relu_2/Relu_output_0_splitncnn_1
+Convolution      /model/layer2/layer2.2/conv1/Conv 1 1 /model/layer2/layer2.1/relu_2/Relu_output_0_splitncnn_1 /model/layer2/layer2.2/conv1/Conv_output_0 0=256 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=131072
+ReLU             /model/layer2/layer2.2/relu/Relu 1 1 /model/layer2/layer2.2/conv1/Conv_output_0 /model/layer2/layer2.2/relu/Relu_output_0
+ConvolutionDepthWise /model/layer2/layer2.2/conv2/Conv 1 1 /model/layer2/layer2.2/relu/Relu_output_0 /model/layer2/layer2.2/conv2/Conv_output_0 0=256 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=18432 7=32
+ReLU             /model/layer2/layer2.2/relu_1/Relu 1 1 /model/layer2/layer2.2/conv2/Conv_output_0 /model/layer2/layer2.2/relu_1/Relu_output_0
+Convolution      /model/layer2/layer2.2/conv3/Conv 1 1 /model/layer2/layer2.2/relu_1/Relu_output_0 /model/layer2/layer2.2/conv3/Conv_output_0 0=512 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=131072
+Split            splitncnn_11             1 2 /model/layer2/layer2.2/conv3/Conv_output_0 /model/layer2/layer2.2/conv3/Conv_output_0_splitncnn_0 /model/layer2/layer2.2/conv3/Conv_output_0_splitncnn_1
+Pooling          /model/layer2/layer2.2/se_module/avg_pool/GlobalAveragePool 1 1 /model/layer2/layer2.2/conv3/Conv_output_0_splitncnn_1 /model/layer2/layer2.2/se_module/avg_pool/GlobalAveragePool_output_0 0=1 4=1
+Convolution      /model/layer2/layer2.2/se_module/fc1/Conv 1 1 /model/layer2/layer2.2/se_module/avg_pool/GlobalAveragePool_output_0 /model/layer2/layer2.2/se_module/fc1/Conv_output_0 0=32 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=16384
+ReLU             /model/layer2/layer2.2/se_module/relu/Relu 1 1 /model/layer2/layer2.2/se_module/fc1/Conv_output_0 /model/layer2/layer2.2/se_module/relu/Relu_output_0
+Convolution      /model/layer2/layer2.2/se_module/fc2/Conv 1 1 /model/layer2/layer2.2/se_module/relu/Relu_output_0 /model/layer2/layer2.2/se_module/fc2/Conv_output_0 0=512 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=16384
+Sigmoid          /model/layer2/layer2.2/se_module/sigmoid/Sigmoid 1 1 /model/layer2/layer2.2/se_module/fc2/Conv_output_0 /model/layer2/layer2.2/se_module/sigmoid/Sigmoid_output_0
+BinaryOp         /model/layer2/layer2.2/se_module/Mul 2 1 /model/layer2/layer2.2/conv3/Conv_output_0_splitncnn_0 /model/layer2/layer2.2/se_module/sigmoid/Sigmoid_output_0 /model/layer2/layer2.2/se_module/Mul_output_0 0=2
+BinaryOp         /model/layer2/layer2.2/Add 2 1 /model/layer2/layer2.2/se_module/Mul_output_0 /model/layer2/layer2.1/relu_2/Relu_output_0_splitncnn_0 /model/layer2/layer2.2/Add_output_0 0=0
+ReLU             /model/layer2/layer2.2/relu_2/Relu 1 1 /model/layer2/layer2.2/Add_output_0 /model/layer2/layer2.2/relu_2/Relu_output_0
+Split            splitncnn_12             1 2 /model/layer2/layer2.2/relu_2/Relu_output_0 /model/layer2/layer2.2/relu_2/Relu_output_0_splitncnn_0 /model/layer2/layer2.2/relu_2/Relu_output_0_splitncnn_1
+Convolution      /model/layer2/layer2.3/conv1/Conv 1 1 /model/layer2/layer2.2/relu_2/Relu_output_0_splitncnn_1 /model/layer2/layer2.3/conv1/Conv_output_0 0=256 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=131072
+ReLU             /model/layer2/layer2.3/relu/Relu 1 1 /model/layer2/layer2.3/conv1/Conv_output_0 /model/layer2/layer2.3/relu/Relu_output_0
+ConvolutionDepthWise /model/layer2/layer2.3/conv2/Conv 1 1 /model/layer2/layer2.3/relu/Relu_output_0 /model/layer2/layer2.3/conv2/Conv_output_0 0=256 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=18432 7=32
+ReLU             /model/layer2/layer2.3/relu_1/Relu 1 1 /model/layer2/layer2.3/conv2/Conv_output_0 /model/layer2/layer2.3/relu_1/Relu_output_0
+Convolution      /model/layer2/layer2.3/conv3/Conv 1 1 /model/layer2/layer2.3/relu_1/Relu_output_0 /model/layer2/layer2.3/conv3/Conv_output_0 0=512 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=131072
+Split            splitncnn_13             1 2 /model/layer2/layer2.3/conv3/Conv_output_0 /model/layer2/layer2.3/conv3/Conv_output_0_splitncnn_0 /model/layer2/layer2.3/conv3/Conv_output_0_splitncnn_1
+Pooling          /model/layer2/layer2.3/se_module/avg_pool/GlobalAveragePool 1 1 /model/layer2/layer2.3/conv3/Conv_output_0_splitncnn_1 /model/layer2/layer2.3/se_module/avg_pool/GlobalAveragePool_output_0 0=1 4=1
+Convolution      /model/layer2/layer2.3/se_module/fc1/Conv 1 1 /model/layer2/layer2.3/se_module/avg_pool/GlobalAveragePool_output_0 /model/layer2/layer2.3/se_module/fc1/Conv_output_0 0=32 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=16384
+ReLU             /model/layer2/layer2.3/se_module/relu/Relu 1 1 /model/layer2/layer2.3/se_module/fc1/Conv_output_0 /model/layer2/layer2.3/se_module/relu/Relu_output_0
+Convolution      /model/layer2/layer2.3/se_module/fc2/Conv 1 1 /model/layer2/layer2.3/se_module/relu/Relu_output_0 /model/layer2/layer2.3/se_module/fc2/Conv_output_0 0=512 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=16384
+Sigmoid          /model/layer2/layer2.3/se_module/sigmoid/Sigmoid 1 1 /model/layer2/layer2.3/se_module/fc2/Conv_output_0 /model/layer2/layer2.3/se_module/sigmoid/Sigmoid_output_0
+BinaryOp         /model/layer2/layer2.3/se_module/Mul 2 1 /model/layer2/layer2.3/conv3/Conv_output_0_splitncnn_0 /model/layer2/layer2.3/se_module/sigmoid/Sigmoid_output_0 /model/layer2/layer2.3/se_module/Mul_output_0 0=2
+BinaryOp         /model/layer2/layer2.3/Add 2 1 /model/layer2/layer2.3/se_module/Mul_output_0 /model/layer2/layer2.2/relu_2/Relu_output_0_splitncnn_0 /model/layer2/layer2.3/Add_output_0 0=0
+ReLU             /model/layer2/layer2.3/relu_2/Relu 1 1 /model/layer2/layer2.3/Add_output_0 /model/layer2/layer2.3/relu_2/Relu_output_0
+Split            splitncnn_14             1 2 /model/layer2/layer2.3/relu_2/Relu_output_0 /model/layer2/layer2.3/relu_2/Relu_output_0_splitncnn_0 /model/layer2/layer2.3/relu_2/Relu_output_0_splitncnn_1
+Convolution      /model/layer3/layer3.0/conv1/Conv 1 1 /model/layer2/layer2.3/relu_2/Relu_output_0_splitncnn_1 /model/layer3/layer3.0/conv1/Conv_output_0 0=512 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=262144
+ReLU             /model/layer3/layer3.0/relu/Relu 1 1 /model/layer3/layer3.0/conv1/Conv_output_0 /model/layer3/layer3.0/relu/Relu_output_0
+ConvolutionDepthWise /model/layer3/layer3.0/conv2/Conv 1 1 /model/layer3/layer3.0/relu/Relu_output_0 /model/layer3/layer3.0/conv2/Conv_output_0 0=512 1=3 11=3 2=1 12=1 3=2 13=2 4=1 14=1 15=1 16=1 5=1 6=73728 7=32
+ReLU             /model/layer3/layer3.0/relu_1/Relu 1 1 /model/layer3/layer3.0/conv2/Conv_output_0 /model/layer3/layer3.0/relu_1/Relu_output_0
+Convolution      /model/layer3/layer3.0/conv3/Conv 1 1 /model/layer3/layer3.0/relu_1/Relu_output_0 /model/layer3/layer3.0/conv3/Conv_output_0 0=1024 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=524288
+Split            splitncnn_15             1 2 /model/layer3/layer3.0/conv3/Conv_output_0 /model/layer3/layer3.0/conv3/Conv_output_0_splitncnn_0 /model/layer3/layer3.0/conv3/Conv_output_0_splitncnn_1
+Convolution      /model/layer3/layer3.0/downsample/downsample.0/Conv 1 1 /model/layer2/layer2.3/relu_2/Relu_output_0_splitncnn_0 /model/layer3/layer3.0/downsample/downsample.0/Conv_output_0 0=1024 1=1 11=1 2=1 12=1 3=2 13=2 4=0 14=0 15=0 16=0 5=1 6=524288
+Pooling          /model/layer3/layer3.0/se_module/avg_pool/GlobalAveragePool 1 1 /model/layer3/layer3.0/conv3/Conv_output_0_splitncnn_1 /model/layer3/layer3.0/se_module/avg_pool/GlobalAveragePool_output_0 0=1 4=1
+Convolution      /model/layer3/layer3.0/se_module/fc1/Conv 1 1 /model/layer3/layer3.0/se_module/avg_pool/GlobalAveragePool_output_0 /model/layer3/layer3.0/se_module/fc1/Conv_output_0 0=64 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=65536
+ReLU             /model/layer3/layer3.0/se_module/relu/Relu 1 1 /model/layer3/layer3.0/se_module/fc1/Conv_output_0 /model/layer3/layer3.0/se_module/relu/Relu_output_0
+Convolution      /model/layer3/layer3.0/se_module/fc2/Conv 1 1 /model/layer3/layer3.0/se_module/relu/Relu_output_0 /model/layer3/layer3.0/se_module/fc2/Conv_output_0 0=1024 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=65536
+Sigmoid          /model/layer3/layer3.0/se_module/sigmoid/Sigmoid 1 1 /model/layer3/layer3.0/se_module/fc2/Conv_output_0 /model/layer3/layer3.0/se_module/sigmoid/Sigmoid_output_0
+BinaryOp         /model/layer3/layer3.0/se_module/Mul 2 1 /model/layer3/layer3.0/conv3/Conv_output_0_splitncnn_0 /model/layer3/layer3.0/se_module/sigmoid/Sigmoid_output_0 /model/layer3/layer3.0/se_module/Mul_output_0 0=2
+BinaryOp         /model/layer3/layer3.0/Add 2 1 /model/layer3/layer3.0/se_module/Mul_output_0 /model/layer3/layer3.0/downsample/downsample.0/Conv_output_0 /model/layer3/layer3.0/Add_output_0 0=0
+ReLU             /model/layer3/layer3.0/relu_2/Relu 1 1 /model/layer3/layer3.0/Add_output_0 /model/layer3/layer3.0/relu_2/Relu_output_0
+Split            splitncnn_16             1 2 /model/layer3/layer3.0/relu_2/Relu_output_0 /model/layer3/layer3.0/relu_2/Relu_output_0_splitncnn_0 /model/layer3/layer3.0/relu_2/Relu_output_0_splitncnn_1
+Convolution      /model/layer3/layer3.1/conv1/Conv 1 1 /model/layer3/layer3.0/relu_2/Relu_output_0_splitncnn_1 /model/layer3/layer3.1/conv1/Conv_output_0 0=512 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=524288
+ReLU             /model/layer3/layer3.1/relu/Relu 1 1 /model/layer3/layer3.1/conv1/Conv_output_0 /model/layer3/layer3.1/relu/Relu_output_0
+ConvolutionDepthWise /model/layer3/layer3.1/conv2/Conv 1 1 /model/layer3/layer3.1/relu/Relu_output_0 /model/layer3/layer3.1/conv2/Conv_output_0 0=512 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=73728 7=32
+ReLU             /model/layer3/layer3.1/relu_1/Relu 1 1 /model/layer3/layer3.1/conv2/Conv_output_0 /model/layer3/layer3.1/relu_1/Relu_output_0
+Convolution      /model/layer3/layer3.1/conv3/Conv 1 1 /model/layer3/layer3.1/relu_1/Relu_output_0 /model/layer3/layer3.1/conv3/Conv_output_0 0=1024 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=524288
+Split            splitncnn_17             1 2 /model/layer3/layer3.1/conv3/Conv_output_0 /model/layer3/layer3.1/conv3/Conv_output_0_splitncnn_0 /model/layer3/layer3.1/conv3/Conv_output_0_splitncnn_1
+Pooling          /model/layer3/layer3.1/se_module/avg_pool/GlobalAveragePool 1 1 /model/layer3/layer3.1/conv3/Conv_output_0_splitncnn_1 /model/layer3/layer3.1/se_module/avg_pool/GlobalAveragePool_output_0 0=1 4=1
+Convolution      /model/layer3/layer3.1/se_module/fc1/Conv 1 1 /model/layer3/layer3.1/se_module/avg_pool/GlobalAveragePool_output_0 /model/layer3/layer3.1/se_module/fc1/Conv_output_0 0=64 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=65536
+ReLU             /model/layer3/layer3.1/se_module/relu/Relu 1 1 /model/layer3/layer3.1/se_module/fc1/Conv_output_0 /model/layer3/layer3.1/se_module/relu/Relu_output_0
+Convolution      /model/layer3/layer3.1/se_module/fc2/Conv 1 1 /model/layer3/layer3.1/se_module/relu/Relu_output_0 /model/layer3/layer3.1/se_module/fc2/Conv_output_0 0=1024 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=65536
+Sigmoid          /model/layer3/layer3.1/se_module/sigmoid/Sigmoid 1 1 /model/layer3/layer3.1/se_module/fc2/Conv_output_0 /model/layer3/layer3.1/se_module/sigmoid/Sigmoid_output_0
+BinaryOp         /model/layer3/layer3.1/se_module/Mul 2 1 /model/layer3/layer3.1/conv3/Conv_output_0_splitncnn_0 /model/layer3/layer3.1/se_module/sigmoid/Sigmoid_output_0 /model/layer3/layer3.1/se_module/Mul_output_0 0=2
+BinaryOp         /model/layer3/layer3.1/Add 2 1 /model/layer3/layer3.1/se_module/Mul_output_0 /model/layer3/layer3.0/relu_2/Relu_output_0_splitncnn_0 /model/layer3/layer3.1/Add_output_0 0=0
+ReLU             /model/layer3/layer3.1/relu_2/Relu 1 1 /model/layer3/layer3.1/Add_output_0 /model/layer3/layer3.1/relu_2/Relu_output_0
+Split            splitncnn_18             1 2 /model/layer3/layer3.1/relu_2/Relu_output_0 /model/layer3/layer3.1/relu_2/Relu_output_0_splitncnn_0 /model/layer3/layer3.1/relu_2/Relu_output_0_splitncnn_1
+Convolution      /model/layer3/layer3.2/conv1/Conv 1 1 /model/layer3/layer3.1/relu_2/Relu_output_0_splitncnn_1 /model/layer3/layer3.2/conv1/Conv_output_0 0=512 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=524288
+ReLU             /model/layer3/layer3.2/relu/Relu 1 1 /model/layer3/layer3.2/conv1/Conv_output_0 /model/layer3/layer3.2/relu/Relu_output_0
+ConvolutionDepthWise /model/layer3/layer3.2/conv2/Conv 1 1 /model/layer3/layer3.2/relu/Relu_output_0 /model/layer3/layer3.2/conv2/Conv_output_0 0=512 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=73728 7=32
+ReLU             /model/layer3/layer3.2/relu_1/Relu 1 1 /model/layer3/layer3.2/conv2/Conv_output_0 /model/layer3/layer3.2/relu_1/Relu_output_0
+Convolution      /model/layer3/layer3.2/conv3/Conv 1 1 /model/layer3/layer3.2/relu_1/Relu_output_0 /model/layer3/layer3.2/conv3/Conv_output_0 0=1024 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=524288
+Split            splitncnn_19             1 2 /model/layer3/layer3.2/conv3/Conv_output_0 /model/layer3/layer3.2/conv3/Conv_output_0_splitncnn_0 /model/layer3/layer3.2/conv3/Conv_output_0_splitncnn_1
+Pooling          /model/layer3/layer3.2/se_module/avg_pool/GlobalAveragePool 1 1 /model/layer3/layer3.2/conv3/Conv_output_0_splitncnn_1 /model/layer3/layer3.2/se_module/avg_pool/GlobalAveragePool_output_0 0=1 4=1
+Convolution      /model/layer3/layer3.2/se_module/fc1/Conv 1 1 /model/layer3/layer3.2/se_module/avg_pool/GlobalAveragePool_output_0 /model/layer3/layer3.2/se_module/fc1/Conv_output_0 0=64 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=65536
+ReLU             /model/layer3/layer3.2/se_module/relu/Relu 1 1 /model/layer3/layer3.2/se_module/fc1/Conv_output_0 /model/layer3/layer3.2/se_module/relu/Relu_output_0
+Convolution      /model/layer3/layer3.2/se_module/fc2/Conv 1 1 /model/layer3/layer3.2/se_module/relu/Relu_output_0 /model/layer3/layer3.2/se_module/fc2/Conv_output_0 0=1024 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=65536
+Sigmoid          /model/layer3/layer3.2/se_module/sigmoid/Sigmoid 1 1 /model/layer3/layer3.2/se_module/fc2/Conv_output_0 /model/layer3/layer3.2/se_module/sigmoid/Sigmoid_output_0
+BinaryOp         /model/layer3/layer3.2/se_module/Mul 2 1 /model/layer3/layer3.2/conv3/Conv_output_0_splitncnn_0 /model/layer3/layer3.2/se_module/sigmoid/Sigmoid_output_0 /model/layer3/layer3.2/se_module/Mul_output_0 0=2
+BinaryOp         /model/layer3/layer3.2/Add 2 1 /model/layer3/layer3.2/se_module/Mul_output_0 /model/layer3/layer3.1/relu_2/Relu_output_0_splitncnn_0 /model/layer3/layer3.2/Add_output_0 0=0
+ReLU             /model/layer3/layer3.2/relu_2/Relu 1 1 /model/layer3/layer3.2/Add_output_0 /model/layer3/layer3.2/relu_2/Relu_output_0
+Split            splitncnn_20             1 2 /model/layer3/layer3.2/relu_2/Relu_output_0 /model/layer3/layer3.2/relu_2/Relu_output_0_splitncnn_0 /model/layer3/layer3.2/relu_2/Relu_output_0_splitncnn_1
+Convolution      /model/layer3/layer3.3/conv1/Conv 1 1 /model/layer3/layer3.2/relu_2/Relu_output_0_splitncnn_1 /model/layer3/layer3.3/conv1/Conv_output_0 0=512 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=524288
+ReLU             /model/layer3/layer3.3/relu/Relu 1 1 /model/layer3/layer3.3/conv1/Conv_output_0 /model/layer3/layer3.3/relu/Relu_output_0
+ConvolutionDepthWise /model/layer3/layer3.3/conv2/Conv 1 1 /model/layer3/layer3.3/relu/Relu_output_0 /model/layer3/layer3.3/conv2/Conv_output_0 0=512 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=73728 7=32
+ReLU             /model/layer3/layer3.3/relu_1/Relu 1 1 /model/layer3/layer3.3/conv2/Conv_output_0 /model/layer3/layer3.3/relu_1/Relu_output_0
+Convolution      /model/layer3/layer3.3/conv3/Conv 1 1 /model/layer3/layer3.3/relu_1/Relu_output_0 /model/layer3/layer3.3/conv3/Conv_output_0 0=1024 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=524288
+Split            splitncnn_21             1 2 /model/layer3/layer3.3/conv3/Conv_output_0 /model/layer3/layer3.3/conv3/Conv_output_0_splitncnn_0 /model/layer3/layer3.3/conv3/Conv_output_0_splitncnn_1
+Pooling          /model/layer3/layer3.3/se_module/avg_pool/GlobalAveragePool 1 1 /model/layer3/layer3.3/conv3/Conv_output_0_splitncnn_1 /model/layer3/layer3.3/se_module/avg_pool/GlobalAveragePool_output_0 0=1 4=1
+Convolution      /model/layer3/layer3.3/se_module/fc1/Conv 1 1 /model/layer3/layer3.3/se_module/avg_pool/GlobalAveragePool_output_0 /model/layer3/layer3.3/se_module/fc1/Conv_output_0 0=64 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=65536
+ReLU             /model/layer3/layer3.3/se_module/relu/Relu 1 1 /model/layer3/layer3.3/se_module/fc1/Conv_output_0 /model/layer3/layer3.3/se_module/relu/Relu_output_0
+Convolution      /model/layer3/layer3.3/se_module/fc2/Conv 1 1 /model/layer3/layer3.3/se_module/relu/Relu_output_0 /model/layer3/layer3.3/se_module/fc2/Conv_output_0 0=1024 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=65536
+Sigmoid          /model/layer3/layer3.3/se_module/sigmoid/Sigmoid 1 1 /model/layer3/layer3.3/se_module/fc2/Conv_output_0 /model/layer3/layer3.3/se_module/sigmoid/Sigmoid_output_0
+BinaryOp         /model/layer3/layer3.3/se_module/Mul 2 1 /model/layer3/layer3.3/conv3/Conv_output_0_splitncnn_0 /model/layer3/layer3.3/se_module/sigmoid/Sigmoid_output_0 /model/layer3/layer3.3/se_module/Mul_output_0 0=2
+BinaryOp         /model/layer3/layer3.3/Add 2 1 /model/layer3/layer3.3/se_module/Mul_output_0 /model/layer3/layer3.2/relu_2/Relu_output_0_splitncnn_0 /model/layer3/layer3.3/Add_output_0 0=0
+ReLU             /model/layer3/layer3.3/relu_2/Relu 1 1 /model/layer3/layer3.3/Add_output_0 /model/layer3/layer3.3/relu_2/Relu_output_0
+Split            splitncnn_22             1 2 /model/layer3/layer3.3/relu_2/Relu_output_0 /model/layer3/layer3.3/relu_2/Relu_output_0_splitncnn_0 /model/layer3/layer3.3/relu_2/Relu_output_0_splitncnn_1
+Convolution      /model/layer3/layer3.4/conv1/Conv 1 1 /model/layer3/layer3.3/relu_2/Relu_output_0_splitncnn_1 /model/layer3/layer3.4/conv1/Conv_output_0 0=512 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=524288
+ReLU             /model/layer3/layer3.4/relu/Relu 1 1 /model/layer3/layer3.4/conv1/Conv_output_0 /model/layer3/layer3.4/relu/Relu_output_0
+ConvolutionDepthWise /model/layer3/layer3.4/conv2/Conv 1 1 /model/layer3/layer3.4/relu/Relu_output_0 /model/layer3/layer3.4/conv2/Conv_output_0 0=512 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=73728 7=32
+ReLU             /model/layer3/layer3.4/relu_1/Relu 1 1 /model/layer3/layer3.4/conv2/Conv_output_0 /model/layer3/layer3.4/relu_1/Relu_output_0
+Convolution      /model/layer3/layer3.4/conv3/Conv 1 1 /model/layer3/layer3.4/relu_1/Relu_output_0 /model/layer3/layer3.4/conv3/Conv_output_0 0=1024 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=524288
+Split            splitncnn_23             1 2 /model/layer3/layer3.4/conv3/Conv_output_0 /model/layer3/layer3.4/conv3/Conv_output_0_splitncnn_0 /model/layer3/layer3.4/conv3/Conv_output_0_splitncnn_1
+Pooling          /model/layer3/layer3.4/se_module/avg_pool/GlobalAveragePool 1 1 /model/layer3/layer3.4/conv3/Conv_output_0_splitncnn_1 /model/layer3/layer3.4/se_module/avg_pool/GlobalAveragePool_output_0 0=1 4=1
+Convolution      /model/layer3/layer3.4/se_module/fc1/Conv 1 1 /model/layer3/layer3.4/se_module/avg_pool/GlobalAveragePool_output_0 /model/layer3/layer3.4/se_module/fc1/Conv_output_0 0=64 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=65536
+ReLU             /model/layer3/layer3.4/se_module/relu/Relu 1 1 /model/layer3/layer3.4/se_module/fc1/Conv_output_0 /model/layer3/layer3.4/se_module/relu/Relu_output_0
+Convolution      /model/layer3/layer3.4/se_module/fc2/Conv 1 1 /model/layer3/layer3.4/se_module/relu/Relu_output_0 /model/layer3/layer3.4/se_module/fc2/Conv_output_0 0=1024 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=65536
+Sigmoid          /model/layer3/layer3.4/se_module/sigmoid/Sigmoid 1 1 /model/layer3/layer3.4/se_module/fc2/Conv_output_0 /model/layer3/layer3.4/se_module/sigmoid/Sigmoid_output_0
+BinaryOp         /model/layer3/layer3.4/se_module/Mul 2 1 /model/layer3/layer3.4/conv3/Conv_output_0_splitncnn_0 /model/layer3/layer3.4/se_module/sigmoid/Sigmoid_output_0 /model/layer3/layer3.4/se_module/Mul_output_0 0=2
+BinaryOp         /model/layer3/layer3.4/Add 2 1 /model/layer3/layer3.4/se_module/Mul_output_0 /model/layer3/layer3.3/relu_2/Relu_output_0_splitncnn_0 /model/layer3/layer3.4/Add_output_0 0=0
+ReLU             /model/layer3/layer3.4/relu_2/Relu 1 1 /model/layer3/layer3.4/Add_output_0 /model/layer3/layer3.4/relu_2/Relu_output_0
+Split            splitncnn_24             1 2 /model/layer3/layer3.4/relu_2/Relu_output_0 /model/layer3/layer3.4/relu_2/Relu_output_0_splitncnn_0 /model/layer3/layer3.4/relu_2/Relu_output_0_splitncnn_1
+Convolution      /model/layer3/layer3.5/conv1/Conv 1 1 /model/layer3/layer3.4/relu_2/Relu_output_0_splitncnn_1 /model/layer3/layer3.5/conv1/Conv_output_0 0=512 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=524288
+ReLU             /model/layer3/layer3.5/relu/Relu 1 1 /model/layer3/layer3.5/conv1/Conv_output_0 /model/layer3/layer3.5/relu/Relu_output_0
+ConvolutionDepthWise /model/layer3/layer3.5/conv2/Conv 1 1 /model/layer3/layer3.5/relu/Relu_output_0 /model/layer3/layer3.5/conv2/Conv_output_0 0=512 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=73728 7=32
+ReLU             /model/layer3/layer3.5/relu_1/Relu 1 1 /model/layer3/layer3.5/conv2/Conv_output_0 /model/layer3/layer3.5/relu_1/Relu_output_0
+Convolution      /model/layer3/layer3.5/conv3/Conv 1 1 /model/layer3/layer3.5/relu_1/Relu_output_0 /model/layer3/layer3.5/conv3/Conv_output_0 0=1024 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=524288
+Split            splitncnn_25             1 2 /model/layer3/layer3.5/conv3/Conv_output_0 /model/layer3/layer3.5/conv3/Conv_output_0_splitncnn_0 /model/layer3/layer3.5/conv3/Conv_output_0_splitncnn_1
+Pooling          /model/layer3/layer3.5/se_module/avg_pool/GlobalAveragePool 1 1 /model/layer3/layer3.5/conv3/Conv_output_0_splitncnn_1 /model/layer3/layer3.5/se_module/avg_pool/GlobalAveragePool_output_0 0=1 4=1
+Convolution      /model/layer3/layer3.5/se_module/fc1/Conv 1 1 /model/layer3/layer3.5/se_module/avg_pool/GlobalAveragePool_output_0 /model/layer3/layer3.5/se_module/fc1/Conv_output_0 0=64 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=65536
+ReLU             /model/layer3/layer3.5/se_module/relu/Relu 1 1 /model/layer3/layer3.5/se_module/fc1/Conv_output_0 /model/layer3/layer3.5/se_module/relu/Relu_output_0
+Convolution      /model/layer3/layer3.5/se_module/fc2/Conv 1 1 /model/layer3/layer3.5/se_module/relu/Relu_output_0 /model/layer3/layer3.5/se_module/fc2/Conv_output_0 0=1024 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=65536
+Sigmoid          /model/layer3/layer3.5/se_module/sigmoid/Sigmoid 1 1 /model/layer3/layer3.5/se_module/fc2/Conv_output_0 /model/layer3/layer3.5/se_module/sigmoid/Sigmoid_output_0
+BinaryOp         /model/layer3/layer3.5/se_module/Mul 2 1 /model/layer3/layer3.5/conv3/Conv_output_0_splitncnn_0 /model/layer3/layer3.5/se_module/sigmoid/Sigmoid_output_0 /model/layer3/layer3.5/se_module/Mul_output_0 0=2
+BinaryOp         /model/layer3/layer3.5/Add 2 1 /model/layer3/layer3.5/se_module/Mul_output_0 /model/layer3/layer3.4/relu_2/Relu_output_0_splitncnn_0 /model/layer3/layer3.5/Add_output_0 0=0
+ReLU             /model/layer3/layer3.5/relu_2/Relu 1 1 /model/layer3/layer3.5/Add_output_0 /model/layer3/layer3.5/relu_2/Relu_output_0
+Split            splitncnn_26             1 2 /model/layer3/layer3.5/relu_2/Relu_output_0 /model/layer3/layer3.5/relu_2/Relu_output_0_splitncnn_0 /model/layer3/layer3.5/relu_2/Relu_output_0_splitncnn_1
+Convolution      /model/layer4/layer4.0/conv1/Conv 1 1 /model/layer3/layer3.5/relu_2/Relu_output_0_splitncnn_1 /model/layer4/layer4.0/conv1/Conv_output_0 0=1024 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=1048576
+ReLU             /model/layer4/layer4.0/relu/Relu 1 1 /model/layer4/layer4.0/conv1/Conv_output_0 /model/layer4/layer4.0/relu/Relu_output_0
+ConvolutionDepthWise /model/layer4/layer4.0/conv2/Conv 1 1 /model/layer4/layer4.0/relu/Relu_output_0 /model/layer4/layer4.0/conv2/Conv_output_0 0=1024 1=3 11=3 2=1 12=1 3=2 13=2 4=1 14=1 15=1 16=1 5=1 6=294912 7=32
+ReLU             /model/layer4/layer4.0/relu_1/Relu 1 1 /model/layer4/layer4.0/conv2/Conv_output_0 /model/layer4/layer4.0/relu_1/Relu_output_0
+Convolution      /model/layer4/layer4.0/conv3/Conv 1 1 /model/layer4/layer4.0/relu_1/Relu_output_0 /model/layer4/layer4.0/conv3/Conv_output_0 0=2048 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=2097152
+Split            splitncnn_27             1 2 /model/layer4/layer4.0/conv3/Conv_output_0 /model/layer4/layer4.0/conv3/Conv_output_0_splitncnn_0 /model/layer4/layer4.0/conv3/Conv_output_0_splitncnn_1
+Convolution      /model/layer4/layer4.0/downsample/downsample.0/Conv 1 1 /model/layer3/layer3.5/relu_2/Relu_output_0_splitncnn_0 /model/layer4/layer4.0/downsample/downsample.0/Conv_output_0 0=2048 1=1 11=1 2=1 12=1 3=2 13=2 4=0 14=0 15=0 16=0 5=1 6=2097152
+Pooling          /model/layer4/layer4.0/se_module/avg_pool/GlobalAveragePool 1 1 /model/layer4/layer4.0/conv3/Conv_output_0_splitncnn_1 /model/layer4/layer4.0/se_module/avg_pool/GlobalAveragePool_output_0 0=1 4=1
+Convolution      /model/layer4/layer4.0/se_module/fc1/Conv 1 1 /model/layer4/layer4.0/se_module/avg_pool/GlobalAveragePool_output_0 /model/layer4/layer4.0/se_module/fc1/Conv_output_0 0=128 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=262144
+ReLU             /model/layer4/layer4.0/se_module/relu/Relu 1 1 /model/layer4/layer4.0/se_module/fc1/Conv_output_0 /model/layer4/layer4.0/se_module/relu/Relu_output_0
+Convolution      /model/layer4/layer4.0/se_module/fc2/Conv 1 1 /model/layer4/layer4.0/se_module/relu/Relu_output_0 /model/layer4/layer4.0/se_module/fc2/Conv_output_0 0=2048 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=262144
+Sigmoid          /model/layer4/layer4.0/se_module/sigmoid/Sigmoid 1 1 /model/layer4/layer4.0/se_module/fc2/Conv_output_0 /model/layer4/layer4.0/se_module/sigmoid/Sigmoid_output_0
+BinaryOp         /model/layer4/layer4.0/se_module/Mul 2 1 /model/layer4/layer4.0/conv3/Conv_output_0_splitncnn_0 /model/layer4/layer4.0/se_module/sigmoid/Sigmoid_output_0 /model/layer4/layer4.0/se_module/Mul_output_0 0=2
+BinaryOp         /model/layer4/layer4.0/Add 2 1 /model/layer4/layer4.0/se_module/Mul_output_0 /model/layer4/layer4.0/downsample/downsample.0/Conv_output_0 /model/layer4/layer4.0/Add_output_0 0=0
+ReLU             /model/layer4/layer4.0/relu_2/Relu 1 1 /model/layer4/layer4.0/Add_output_0 /model/layer4/layer4.0/relu_2/Relu_output_0
+Split            splitncnn_28             1 2 /model/layer4/layer4.0/relu_2/Relu_output_0 /model/layer4/layer4.0/relu_2/Relu_output_0_splitncnn_0 /model/layer4/layer4.0/relu_2/Relu_output_0_splitncnn_1
+Convolution      /model/layer4/layer4.1/conv1/Conv 1 1 /model/layer4/layer4.0/relu_2/Relu_output_0_splitncnn_1 /model/layer4/layer4.1/conv1/Conv_output_0 0=1024 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=2097152
+ReLU             /model/layer4/layer4.1/relu/Relu 1 1 /model/layer4/layer4.1/conv1/Conv_output_0 /model/layer4/layer4.1/relu/Relu_output_0
+ConvolutionDepthWise /model/layer4/layer4.1/conv2/Conv 1 1 /model/layer4/layer4.1/relu/Relu_output_0 /model/layer4/layer4.1/conv2/Conv_output_0 0=1024 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=294912 7=32
+ReLU             /model/layer4/layer4.1/relu_1/Relu 1 1 /model/layer4/layer4.1/conv2/Conv_output_0 /model/layer4/layer4.1/relu_1/Relu_output_0
+Convolution      /model/layer4/layer4.1/conv3/Conv 1 1 /model/layer4/layer4.1/relu_1/Relu_output_0 /model/layer4/layer4.1/conv3/Conv_output_0 0=2048 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=2097152
+Split            splitncnn_29             1 2 /model/layer4/layer4.1/conv3/Conv_output_0 /model/layer4/layer4.1/conv3/Conv_output_0_splitncnn_0 /model/layer4/layer4.1/conv3/Conv_output_0_splitncnn_1
+Pooling          /model/layer4/layer4.1/se_module/avg_pool/GlobalAveragePool 1 1 /model/layer4/layer4.1/conv3/Conv_output_0_splitncnn_1 /model/layer4/layer4.1/se_module/avg_pool/GlobalAveragePool_output_0 0=1 4=1
+Convolution      /model/layer4/layer4.1/se_module/fc1/Conv 1 1 /model/layer4/layer4.1/se_module/avg_pool/GlobalAveragePool_output_0 /model/layer4/layer4.1/se_module/fc1/Conv_output_0 0=128 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=262144
+ReLU             /model/layer4/layer4.1/se_module/relu/Relu 1 1 /model/layer4/layer4.1/se_module/fc1/Conv_output_0 /model/layer4/layer4.1/se_module/relu/Relu_output_0
+Convolution      /model/layer4/layer4.1/se_module/fc2/Conv 1 1 /model/layer4/layer4.1/se_module/relu/Relu_output_0 /model/layer4/layer4.1/se_module/fc2/Conv_output_0 0=2048 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=262144
+Sigmoid          /model/layer4/layer4.1/se_module/sigmoid/Sigmoid 1 1 /model/layer4/layer4.1/se_module/fc2/Conv_output_0 /model/layer4/layer4.1/se_module/sigmoid/Sigmoid_output_0
+BinaryOp         /model/layer4/layer4.1/se_module/Mul 2 1 /model/layer4/layer4.1/conv3/Conv_output_0_splitncnn_0 /model/layer4/layer4.1/se_module/sigmoid/Sigmoid_output_0 /model/layer4/layer4.1/se_module/Mul_output_0 0=2
+BinaryOp         /model/layer4/layer4.1/Add 2 1 /model/layer4/layer4.1/se_module/Mul_output_0 /model/layer4/layer4.0/relu_2/Relu_output_0_splitncnn_0 /model/layer4/layer4.1/Add_output_0 0=0
+ReLU             /model/layer4/layer4.1/relu_2/Relu 1 1 /model/layer4/layer4.1/Add_output_0 /model/layer4/layer4.1/relu_2/Relu_output_0
+Split            splitncnn_30             1 2 /model/layer4/layer4.1/relu_2/Relu_output_0 /model/layer4/layer4.1/relu_2/Relu_output_0_splitncnn_0 /model/layer4/layer4.1/relu_2/Relu_output_0_splitncnn_1
+Convolution      /model/layer4/layer4.2/conv1/Conv 1 1 /model/layer4/layer4.1/relu_2/Relu_output_0_splitncnn_1 /model/layer4/layer4.2/conv1/Conv_output_0 0=1024 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=2097152
+ReLU             /model/layer4/layer4.2/relu/Relu 1 1 /model/layer4/layer4.2/conv1/Conv_output_0 /model/layer4/layer4.2/relu/Relu_output_0
+ConvolutionDepthWise /model/layer4/layer4.2/conv2/Conv 1 1 /model/layer4/layer4.2/relu/Relu_output_0 /model/layer4/layer4.2/conv2/Conv_output_0 0=1024 1=3 11=3 2=1 12=1 3=1 13=1 4=1 14=1 15=1 16=1 5=1 6=294912 7=32
+ReLU             /model/layer4/layer4.2/relu_1/Relu 1 1 /model/layer4/layer4.2/conv2/Conv_output_0 /model/layer4/layer4.2/relu_1/Relu_output_0
+Convolution      /model/layer4/layer4.2/conv3/Conv 1 1 /model/layer4/layer4.2/relu_1/Relu_output_0 /model/layer4/layer4.2/conv3/Conv_output_0 0=2048 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=2097152
+Split            splitncnn_31             1 2 /model/layer4/layer4.2/conv3/Conv_output_0 /model/layer4/layer4.2/conv3/Conv_output_0_splitncnn_0 /model/layer4/layer4.2/conv3/Conv_output_0_splitncnn_1
+Pooling          /model/layer4/layer4.2/se_module/avg_pool/GlobalAveragePool 1 1 /model/layer4/layer4.2/conv3/Conv_output_0_splitncnn_1 /model/layer4/layer4.2/se_module/avg_pool/GlobalAveragePool_output_0 0=1 4=1
+Convolution      /model/layer4/layer4.2/se_module/fc1/Conv 1 1 /model/layer4/layer4.2/se_module/avg_pool/GlobalAveragePool_output_0 /model/layer4/layer4.2/se_module/fc1/Conv_output_0 0=128 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=262144
+ReLU             /model/layer4/layer4.2/se_module/relu/Relu 1 1 /model/layer4/layer4.2/se_module/fc1/Conv_output_0 /model/layer4/layer4.2/se_module/relu/Relu_output_0
+Convolution      /model/layer4/layer4.2/se_module/fc2/Conv 1 1 /model/layer4/layer4.2/se_module/relu/Relu_output_0 /model/layer4/layer4.2/se_module/fc2/Conv_output_0 0=2048 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=262144
+Sigmoid          /model/layer4/layer4.2/se_module/sigmoid/Sigmoid 1 1 /model/layer4/layer4.2/se_module/fc2/Conv_output_0 /model/layer4/layer4.2/se_module/sigmoid/Sigmoid_output_0
+BinaryOp         /model/layer4/layer4.2/se_module/Mul 2 1 /model/layer4/layer4.2/conv3/Conv_output_0_splitncnn_0 /model/layer4/layer4.2/se_module/sigmoid/Sigmoid_output_0 /model/layer4/layer4.2/se_module/Mul_output_0 0=2
+BinaryOp         /model/layer4/layer4.2/Add 2 1 /model/layer4/layer4.2/se_module/Mul_output_0 /model/layer4/layer4.1/relu_2/Relu_output_0_splitncnn_0 /model/layer4/layer4.2/Add_output_0 0=0
+ReLU             /model/layer4/layer4.2/relu_2/Relu 1 1 /model/layer4/layer4.2/Add_output_0 /model/layer4/layer4.2/relu_2/Relu_output_0
+Pooling          /model/avg_pool/GlobalAveragePool 1 1 /model/layer4/layer4.2/relu_2/Relu_output_0 /model/avg_pool/GlobalAveragePool_output_0 0=1 4=1
+Reshape          /model/Reshape           1 1 /model/avg_pool/GlobalAveragePool_output_0 /model/Reshape_output_0 0=-1
+InnerProduct     /model/last_linear/Gemm  1 1 /model/Reshape_output_0 /model/last_linear/Gemm_output_0 0=70 1=1 2=143360
+Softmax          /Softmax                 1 1 /model/last_linear/Gemm_output_0 /Softmax_output_0 0=0 1=1
+BinaryOp         /Mul                     2 1 /Softmax_output_0 /Constant_output_0 /Mul_output_0 0=2
+Reduction        /ReduceSum               1 1 /Mul_output_0 664 0=0 1=0 -23303=1,-1 4=0 5=1

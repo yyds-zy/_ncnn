@@ -1,5 +1,9 @@
 package com.lenovo.engine;
 
+/**
+ * Create by xuezhiyuan on 2024/12/3
+ */
+
 import android.content.res.AssetManager;
 
 import com.lenovo.engine.bean.FaceBox;
@@ -13,6 +17,9 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 活体检测
+ */
 public class Live extends Component {
     private long nativeHandler;
 

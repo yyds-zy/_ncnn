@@ -1,5 +1,9 @@
 package com.lenovo.engine;
 
+/**
+ * Create by xuezhiyuan on 2024/12/3
+ */
+
 public abstract class Component {
     private static boolean libraryFound = false;
 

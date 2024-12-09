@@ -1,5 +1,9 @@
 package com.lenovo.engine;
 
+/**
+ * Create by xuezhiyuan on 2024/12/3
+ */
+
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 
@@ -7,6 +11,9 @@ import com.lenovo.engine.bean.FaceBox;
 
 import java.util.List;
 
+/**
+ * 人脸检测
+ */
 public class FaceDetector extends Component {
 
     private long nativeHandler;

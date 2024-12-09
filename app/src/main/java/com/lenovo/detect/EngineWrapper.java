@@ -3,9 +3,11 @@ package com.lenovo.detect;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Environment;
+import android.util.Log;
 
-import com.lenovo.engine.MTCNN;
+import com.lenovo.engine.AgeDetector;
 import com.lenovo.engine.FaceDetector;
+import com.lenovo.engine.KeyPointDetector;
 import com.lenovo.engine.Live;
 import com.lenovo.engine.bean.FaceBox;
 
@@ -16,7 +18,8 @@ public class EngineWrapper {
 
     private Live live = new Live();
     private FaceDetector faceDetector = new FaceDetector();
-    private MTCNN ageDetector = new MTCNN();
+    private AgeDetector ageDetector = new AgeDetector();
+    private KeyPointDetector keyPointDetector = new KeyPointDetector();
     private static EngineWrapper instance;
     private EngineWrapper() {}
 
@@ -41,8 +44,11 @@ public class EngineWrapper {
         if (ret == 0) {
             ret = live.loadModel(context.getAssets());
             if (ret == 0) {
-                ageDetector.loadModel(context.getAssets());
-                return true;
+                ret = ageDetector.loadModel(context.getAssets());
+                if (ret == 0) {
+                    keyPointDetector.loadModel(context.getAssets());
+                    return true;
+                }
             }
         }
         return false;
@@ -51,10 +57,16 @@ public class EngineWrapper {
     public void unInit() {
         faceDetector.destroy();
         live.destroy();
+        ageDetector.destroy();
     }
 
     public List<FaceBox> detectFace(Bitmap bitmap) {
         List<FaceBox> ret = faceDetector.detect(bitmap);
+        return ret;
+    }
+
+    public List<FaceBox> detectFaceTmp(byte[] yuv, int width, int height, int ori) {
+        List<FaceBox> ret = keyPointDetector.detect(yuv, width, height, ori);
         return ret;
     }
 
@@ -73,10 +85,19 @@ public class EngineWrapper {
     }
 
     public DetectionResult detect(byte[] yuv, int width, int height, int ori) {
-        List<FaceBox> faceBoxes = detectFace(yuv, width, height, ori);
+        detectAge(null);
+
+        long start_1 = System.currentTimeMillis();
+        List<FaceBox> faceBoxes = detectFaceTmp(yuv, width, height, ori);
+        long end_1 = System.currentTimeMillis();
+        long time_1 = end_1 - start_1;
+        Log.d("xuezhiyuan", "人脸检测耗时：" + time_1 + " ms");
+
+        //List<FaceBox> faceBoxes = detectFace(yuv, width, height, ori);
         if (!faceBoxes.isEmpty()) {
             long start = System.currentTimeMillis();
             FaceBox faceBox = faceBoxes.get(0);
+
             float c = detectLive(yuv, width, height, ori, faceBox);
             faceBox.setConfidence(c);
 

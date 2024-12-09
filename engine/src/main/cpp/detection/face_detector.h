@@ -1,5 +1,5 @@
 //
-// Created by yuanhao on 20-6-10.
+// Created by xuezhiyuan on 2024/11/29.
 //
 
 #ifndef LIVEBODYEXAMPLE_FACE_DETECTOR_H
@@ -30,8 +30,8 @@ private:
     const std::string net_output_name_ = "detection_out";
     ncnn::Option option_;
     float threshold_;
-    const float mean_val_[3] = {104.f, 117.f, 123.f};
     int thread_num_;
+    const float mean_val_[3] = {104.f, 117.f, 123.f};
     int min_face_size_;
 };
 

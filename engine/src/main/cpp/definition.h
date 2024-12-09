@@ -1,7 +1,6 @@
 //
-// Created by yuanhao on 20-6-9.
+// Created by xuezhiyuan on 2024/11/29.
 //
-
 #ifndef LIVEBODYEXAMPLE_DEFINITION_H
 #define LIVEBODYEXAMPLE_DEFINITION_H
 
@@ -17,7 +16,10 @@
     Java_com_lenovo_engine_Live_##METHOD_NAME
 
 #define AGE_DETECTOR_METHOD(METHOD_NAME) \
-    Java_com_lenovo_engine_MTCNN_##METHOD_NAME
+    Java_com_lenovo_engine_AgeDetector_##METHOD_NAME
+
+#define MTCNN_DETECTOR_METHOD(METHOD_NAME) \
+    Java_com_lenovo_engine_KeyPointDetector_##METHOD_NAME
 
 
 struct FaceBox {

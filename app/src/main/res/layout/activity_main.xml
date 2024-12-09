@@ -18,7 +18,6 @@
         android:layout_height="wrap_content"/>
 
 
-
     <TextView
         android:id="@+id/face_tv"
         android:textColor="@color/white"

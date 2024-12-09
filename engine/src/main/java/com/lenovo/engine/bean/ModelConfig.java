@@ -1,5 +1,9 @@
 package com.lenovo.engine.bean;
 
+/**
+ * Create by xuezhiyuan on 2024/12/3
+ */
+
 public class ModelConfig {
     private String name;
     private int width;

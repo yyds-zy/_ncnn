@@ -22,6 +22,7 @@ import android.hardware.camera2.CameraManager;
 import android.hardware.camera2.CaptureRequest;
 import android.media.Image;
 import android.media.ImageReader;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -74,26 +75,6 @@ public class MainActivity extends AppCompatActivity {
         mFaceTv = findViewById(R.id.face_tv);
         rectView = findViewById(R.id.rect);
         mControlDetect = findViewById(R.id.switch_detect);
-
-        checkAndRequestPermissions();
-
-        boolean init = EngineWrapper.getInstance().init(this);
-        if (init) {
-            Toast.makeText(this, "Engine init success.", Toast.LENGTH_LONG).show();
-        } else {
-            Toast.makeText(this, "Engine init failed.", Toast.LENGTH_LONG).show();
-            finish();
-        }
-
-//        List<FaceBox> faceBoxes = EngineWrapper.getInstance().detectFace(loadBitmapFromAsset(getApplicationContext(), "img.png"));
-//        boolean empty = faceBoxes.isEmpty();
-//        Log.d("MainActivity", empty + "");
-
-        if (!checkPermission()) {
-            requestPermission();
-        }
-
-
         surfaceView = findViewById(R.id.surfaceView);
         // 获得 SurfaceHolder 对象
         mSurfaceHolder = surfaceView.getHolder();
@@ -106,31 +87,34 @@ public class MainActivity extends AppCompatActivity {
         mSurfaceHolder.setKeepScreenOn(true);
         mSurfaceHolder.addCallback(mSurfaceCallBack);
 
+        // 请求权限
+        checkAndRequestPermissions();
+        if (!checkCameraPermission()) {
+            requestCameraPermission();
+        }
+
+        boolean init = EngineWrapper.getInstance().init(this);
+        if (init) {
+            Toast.makeText(this, "Engine init success.", Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(this, "Engine init failed.", Toast.LENGTH_LONG).show();
+            finish();
+        }
+
+
         mControlDetect.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 // 打开
                 isFaceDetect = true;
                 rectView.setVisibility(View.VISIBLE);
-//                MMKVManager.getInstance().set("is_face_detect", true);
-                Bitmap bitmap = loadBitmapFromAsset(getBaseContext(), "121.png");
-                if (bitmap != null) {
-                    EngineWrapper.getInstance().detectAge(bitmap);
-                }
-
             } else {
                 // 关闭
                 isFaceDetect = false;
                 rectView.setVisibility(View.GONE);
-//                MMKVManager.getInstance().set("is_face_detect", false);
-
-                Bitmap bitmap = loadBitmapFromAsset(getBaseContext(), "imgs.png");
-                if (bitmap != null) {
-                    EngineWrapper.getInstance().detectAge(bitmap);
-                }
             }
         });
-        mControlDetect.setChecked(isFaceDetect);
     }
+
     private ImageReader mImageReaderPreview;
     private SurfaceHolder.Callback mSurfaceCallBack = new SurfaceHolder.Callback() {
 
@@ -162,6 +146,8 @@ public class MainActivity extends AppCompatActivity {
                             int right = detect.getRight();
                             int bottom = detect.getBottom();
                             float confidence = detect.getConfidence();
+                            long time = detect.getTime();
+                            Log.d("xuezhiyuan", "活体检测耗时：" + time + " ms");
 
                             if (confidence >= Threshold) {
                                 mFaceTv.setText("真脸");
@@ -277,11 +263,11 @@ public class MainActivity extends AppCompatActivity {
         EngineWrapper.getInstance().unInit();
     }
 
-    private boolean checkPermission() {
+    private boolean checkCameraPermission() {
         return ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED;
     }
 
-    private void requestPermission() {
+    private void requestCameraPermission() {
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.CAMERA},
                 PERMISSIONS_REQUEST_CODE);
@@ -291,7 +277,26 @@ public class MainActivity extends AppCompatActivity {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
                 ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
 
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 203);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                if (Environment.isExternalStorageManager()) {
+                    // 拥有管理所有文件的权限，可以进行文件操作
+                } else {
+                    // 没有权限，需要引导用户去设置中开启
+                    Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+                    intent.setData(Uri.parse("package:" + getPackageName()));
+                    startActivityForResult(intent, 203);
+                }
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
+                        ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                    // 拥有存储权限，可以进行文件操作
+                } else {
+                    // 没有权限，申请权限
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 203);
+                }
+            }
+
         } else {
             Toast.makeText(this,"已经有了文件权限",Toast.LENGTH_SHORT).show();
         }
@@ -306,6 +311,12 @@ public class MainActivity extends AppCompatActivity {
                 takePreview();
             } else {
                 finish();
+            }
+        } else {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(MainActivity.this, "请求读写权限成功", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(MainActivity.this, "请求读写权限失败", Toast.LENGTH_SHORT).show();
             }
         }
     }
