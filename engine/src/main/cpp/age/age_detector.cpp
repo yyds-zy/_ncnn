@@ -30,23 +30,19 @@ int AgeDetector::LoadModel(AAssetManager* assetManager) {
 }
 
 int AgeDetector::DetectAge(ncnn::Mat &img_) {
-    LOG_ERR("FaceDetector DetectAge 1.");
     ncnn_img = img_;
-    //ncnn_img.substract_mean_normalize(age_mean_vals,age_norm_vals);
-    //LOG_ERR("FaceDetector DetectAge 2.");
     // 设置输入
     ncnn::Extractor ex = net_.create_extractor();
     ex.input("input.1", ncnn_img);
-    LOG_ERR("FaceDetector DetectAge 3.");
     // 执行推理
     ncnn::Mat out;
     ex.extract("664", out);
-    LOG_ERR("FaceDetector DetectAge 4.");
     const float* data = out.row(0);
-    LOG_ERR("FaceDetector DetectAge 5.");
+    float result = data[0];
+    LOG_ERR("FaceDetector xuezhiyuan  age  %f  ", result);
     int age = 0;
     if (data != nullptr) {
-        age = static_cast<int>(data[0]);
+        age = static_cast<int>(result);
         LOG_ERR("FaceDetector xuezhiyuan  age  %d  ", age);
     }
     return age;

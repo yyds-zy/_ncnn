@@ -8,7 +8,6 @@
 #include <android/asset_manager_jni.h>
 #include <android/log.h>
 #include <opencv2/opencv.hpp>
-#include "../include/ncnn/net.h"
 
 #define TAG "age_detector_jni.cpp"
 #define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG,TAG,__VA_ARGS__)
@@ -71,17 +70,20 @@ AGE_DETECTOR_METHOD(nativeLoadModel)(JNIEnv *env, jobject instance, jobject asse
 JNIEXPORT jint JNICALL
 AGE_DETECTOR_METHOD(nativeDetectBitmap)(JNIEnv *env, jobject instance, jobject bitmap) {
     LOGD("AgeDetector, ageDetector =  --------------------------- nativeDetectBitmap  ------------------------------------- ");
-    cv::Mat img;
     //int ret = ConvertBitmap2Mat(env, bitmap, img);
-    img = cv::imread("/sdcard/DCIM/36.jpg");
+    cv::Mat img = cv::imread("/sdcard/DCIM/36.jpg");
     if(img.empty()) {
+        LOGD("AgeDetector, img.empty() --------------------- ");
         return 0;
     }
 
-    cv::cvtColor(img, img, cv::COLOR_BGR2RGB);
+    cv::cvtColor(img, img, cv::COLOR_BGRA2BGR);
 
+    // 调整图像大小到 (224, 224)
     cv::Mat resized_image;
     cv::resize(img, resized_image, cv::Size(224, 224));
+    cv::imwrite("/sdcard/DCIM/37.jpg", resized_image);
+
     // 将 OpenCV Mat 转换为 [0, 1] 范围的浮点数数组
     resized_image.convertTo(resized_image, CV_32F, 1.0 / 255);
 
@@ -99,13 +101,15 @@ AGE_DETECTOR_METHOD(nativeDetectBitmap)(JNIEnv *env, jobject instance, jobject b
             }
         }
     }
-
+//
     // 添加批次维度
     ncnn::Mat in_with_batch = in.clone();
     //in_with_batch.reshape(224,224,3,1);
 
+    //ncnn::Mat in = ncnn::Mat::from_pixels(resized_image.data, ncnn::Mat::PIXEL_BGR, width, height, 1);
+
     //ncnn::Mat in = ncnn::Mat::from_pixels(img.data, ncnn::Mat::PIXEL_BGR, img.cols,img.rows);
-    LOGD("AgeDetector, ageDetector = --------------------------- img.cols = %d  img.rows = %d ", img.cols, img.rows);
+    LOGD("AgeDetector, ageDetector = --------------------------- img.cols = %d  img.rows = %d ", resized_image.cols, resized_image.rows);
     auto detectAgeStart = std::chrono::high_resolution_clock::now();
     int age = get_age_detector(env, instance)->DetectAge(in_with_batch);
     auto detectAgeEnd = std::chrono::high_resolution_clock::now();
