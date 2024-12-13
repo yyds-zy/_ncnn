@@ -8,10 +8,6 @@ import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.util.Log;
 
-import com.lenovo.engine.bean.FaceBox;
-
-import java.util.List;
-
 public class AgeDetector extends Component {
 
     private long nativeHandler;

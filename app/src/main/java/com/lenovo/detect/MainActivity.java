@@ -14,7 +14,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.ImageFormat;
 import android.graphics.PixelFormat;
-import android.hardware.Camera;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraDevice;
@@ -38,11 +37,9 @@ import android.view.View;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.lenovo.engine.bean.FaceBox;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * https://blog.csdn.net/tong5956/article/details/82688886
@@ -134,6 +131,7 @@ public class MainActivity extends AppCompatActivity {
                     boolean hasFace = detect.isHasFace();
                     runOnUiThread(() -> {
                         if (hasFace) {
+                            Log.d("xuezhiyuan1", "有人脸");
                             //left：639 top:410 right:890 bottom:661
                             if (mFaceTv.getVisibility() == View.GONE) {
                                 mFaceTv.setVisibility(View.VISIBLE);
@@ -148,6 +146,7 @@ public class MainActivity extends AppCompatActivity {
                             float confidence = detect.getConfidence();
                             long time = detect.getTime();
                             Log.d("xuezhiyuan", "活体检测耗时：" + time + " ms");
+                            Log.d("xuezhiyuan1", "confidence：" + confidence);
 
                             if (confidence >= Threshold) {
                                 mFaceTv.setText("真脸");
