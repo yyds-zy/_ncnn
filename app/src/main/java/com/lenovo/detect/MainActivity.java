@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
     private CameraCaptureSession mCameraCaptureSession;
     private CameraDevice mCameraDevice;
     private TextView mFaceTv;
-    private float Threshold = 0.915F;
+    private float Threshold = 0.457F;
     private Switch mControlDetect;
     private boolean isFaceDetect;
     private SurfaceHolder mSurfaceHolder;
@@ -131,7 +131,6 @@ public class MainActivity extends AppCompatActivity {
                     boolean hasFace = detect.isHasFace();
                     runOnUiThread(() -> {
                         if (hasFace) {
-                            Log.d("xuezhiyuan1", "有人脸");
                             //left：639 top:410 right:890 bottom:661
                             if (mFaceTv.getVisibility() == View.GONE) {
                                 mFaceTv.setVisibility(View.VISIBLE);
@@ -145,23 +144,20 @@ public class MainActivity extends AppCompatActivity {
                             int bottom = detect.getBottom();
                             float confidence = detect.getConfidence();
                             long time = detect.getTime();
-                            Log.d("xuezhiyuan", "活体检测耗时：" + time + " ms");
-                            Log.d("xuezhiyuan1", "confidence：" + confidence);
-
-//                            if (confidence >= Threshold) {
-//                                mFaceTv.setText("真脸");
-//                            } else {
-//                                mFaceTv.setText("假脸");
-//                            }
-
-                            //if (confidence >= Threshold) {
+                            Log.d(TAG, "活体检测耗时：" + time + " ms");
+                            if (confidence >= Threshold) {
+                                mFaceTv.setText("真脸");
+                            } else {
+                                mFaceTv.setText("假脸");
+                            }
+                            if (confidence >= Threshold) {
                                 rectView.setX1(SIZE_WIDTH - left);
                                 rectView.setX2(SIZE_WIDTH - right);
                                 rectView.setY1(top);
                                 rectView.setY2(bottom);
                                 rectView.setConfidence(confidence);
                                 rectView.invalidate();
-                            //}
+                            }
                         } else {
                             mFaceTv.setVisibility(View.GONE);
                             rectView.setVisibility(View.GONE);

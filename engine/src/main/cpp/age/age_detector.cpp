@@ -2,7 +2,6 @@
 // Created by xuezhiyuan on 2024/11/29.
 //
 #include "age_detector.h"
-#include "cpu.h"
 
 AgeDetector::AgeDetector() : thread_num_(2) {
     option_.lightmode = true;

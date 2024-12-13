@@ -4,7 +4,6 @@
 #include "mtcnn.h"
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
-#include "cpu.h"
 #include "../android_log.h"
 
 #define TAG "mtcnn_cpp"

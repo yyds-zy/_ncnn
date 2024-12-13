@@ -13,7 +13,6 @@ import com.lenovo.engine.bean.FaceBox;
 import java.util.List;
 
 public class EngineWrapper {
-    public static String modelFile = Environment.getExternalStorageDirectory().getPath() + "/lenovo_model/";
 
     private Live live = new Live();
     private AgeDetector ageDetector = new AgeDetector();
@@ -38,14 +37,11 @@ public class EngineWrapper {
      * @return
      */
     public boolean init(Context context) {
-        int ret = keyPointDetector.loadModel(context.getAssets());
-        Log.d("EngineWrap", "model init face ret " + ret);
+        int ret = live.loadModel(context.getAssets());
         if (ret == 0) {
-            ret = live.loadModel(context.getAssets());
-            Log.d("EngineWrap", "model init live ret " + ret);
+            ret = ageDetector.loadModel(context.getAssets());
             if (ret == 0) {
-                ret = ageDetector.loadModel(context.getAssets());
-                Log.d("EngineWrap", "model init ageDetector ret " + ret);
+                ret = keyPointDetector.loadModel(context.getAssets());
                 if (ret == 0) {
                     return true;
                 }
@@ -55,14 +51,9 @@ public class EngineWrapper {
     }
 
     public void unInit() {
-        keyPointDetector.destroy();
         live.destroy();
         ageDetector.destroy();
-    }
-
-    public List<FaceBox> detectFace(Bitmap bitmap) {
-        List<FaceBox> ret = keyPointDetector.detect(bitmap);
-        return ret;
+        keyPointDetector.destroy();
     }
 
     public List<FaceBox> detectFaceTmp(byte[] yuv, int width, int height, int ori) {
@@ -84,14 +75,13 @@ public class EngineWrapper {
         List<FaceBox> faceBoxes = detectFaceTmp(yuv, width, height, ori);
         long end_1 = System.currentTimeMillis();
         long time_1 = end_1 - start_1;
-        Log.d("xuezhiyuan", "人脸检测耗时：" + time_1 + " ms");
+        Log.d("EngineWrapper", "人脸检测耗时：" + time_1 + " ms");
 
         if (!faceBoxes.isEmpty()) {
             long start = System.currentTimeMillis();
             FaceBox faceBox = faceBoxes.get(0);
 
             float c = detectLive(yuv, width, height, ori, faceBox);
-            Log.d("xuezhiyuan1", "c：" + c);
             faceBox.setConfidence(c);
 
             long end = System.currentTimeMillis();

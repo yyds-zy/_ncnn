@@ -146,28 +146,19 @@ MTCNN_DETECTOR_METHOD(nativeDetectYuv)(JNIEnv *env, jobject instance, jbyteArray
     ncnn::Mat in = ncnn::Mat::from_pixels(bgr.data, ncnn::Mat::PIXEL_BGR2RGB, bgr.cols, bgr.rows);
 
     auto face_start = std::chrono::high_resolution_clock::now();
-    // TODO  mtcnn 检测人脸关键点信息  开始计时
     get_key_point_detector(env, instance)->detectMaxFace(in, faces);
-    // TODO mtcnn 结束人脸关键点检测计时
     auto face_end = std::chrono::high_resolution_clock::now();
     auto face_cost = std::chrono::duration_cast<std::chrono::microseconds>(face_end - face_start);
     long long duration_ms = face_cost.count() / 1000;
-    std::cout << "xuezhiyuan face detection duration: " << duration_ms << " ms" << std::endl;
 
-    LOGD("face num %d ", faces.size());
     // 得到List<FaceBox>  boxes
     for (const Bbox &face: faces) {
         FaceBox box;
         box.confidence = face.score;
         box.x1 = face.x1;
-        std::cout << "xuezhiyuan face detection x1: " << face.x1 << std::endl;
-        LOGD("face x1 %d ", face.x1);
         box.y1 = face.y1;
-        LOGD("face y1 %d ", face.y1);
         box.x2 = face.x2;
-        LOGD("face x2 %d ", face.x2);
         box.y2 = face.y2;
-        LOGD("face y2 %d ", face.y2);
         boxes.push_back(box);
     }
     env->ReleaseByteArrayElements(yuv, yuv_, 0);

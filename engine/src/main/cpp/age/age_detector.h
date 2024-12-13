@@ -5,7 +5,7 @@
 #define DETECT_AGE_DETECTOR_H
 
 #include <opencv2/imgproc.hpp>
-#include "net.h"
+#include "../ncnn/net.h"
 #include "../definition.h"
 #include "../android_log.h"
 
