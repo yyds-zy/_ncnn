@@ -55,7 +55,7 @@ public class EngineWrapper {
     }
 
     public void unInit() {
-        ageDetector.destroy();
+        keyPointDetector.destroy();
         live.destroy();
         ageDetector.destroy();
     }
@@ -65,7 +65,7 @@ public class EngineWrapper {
         return ret;
     }
 
-    public List<FaceBox> detectFace(byte[] yuv, int width, int height, int ori) {
+    public List<FaceBox> detectFaceTmp(byte[] yuv, int width, int height, int ori) {
         List<FaceBox> ret = keyPointDetector.detect(yuv, width, height, ori);
         return ret;
     }
@@ -81,7 +81,7 @@ public class EngineWrapper {
 
     public DetectionResult detect(byte[] yuv, int width, int height, int ori) {
         long start_1 = System.currentTimeMillis();
-        List<FaceBox> faceBoxes = detectFace(yuv, width, height, ori);
+        List<FaceBox> faceBoxes = detectFaceTmp(yuv, width, height, ori);
         long end_1 = System.currentTimeMillis();
         long time_1 = end_1 - start_1;
         Log.d("xuezhiyuan", "人脸检测耗时：" + time_1 + " ms");

@@ -81,28 +81,6 @@ float Live::Detect(cv::Mat &src, FaceBox &box) {
     auto detectEnd = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(detectEnd - start);
     long long duration_ms = duration.count() / 1000;
-
-//
-//    cv::Mat faceMat;
-//    // 检查box的坐标是否在src图像的边界内
-////    int x1 = std::max(0, box.x1); // 确保x1不小于0
-////    int y1 = std::max(0, box.y1); // 确保y1不小于0
-////    int x2 = std::min(box.x2, src.cols - 1); // 确保x2不大于src的宽度
-////    int y2 = std::min(box.y2, src.rows - 1); // 确保y2不大于src的高度
-//
-//    if (box.x1 >= 0 && box.y1 >= 0 && box.x2 <= src.cols - 1 && box.y2 <= src.rows - 1) {
-//        int x1 = box.x1; // 确保x1不小于0
-//        int y1 = box.y1; // 确保y1不小于0
-//        int x2 = box.x2; // 确保x2不大于src的宽度
-//        int y2 = box.y2; // 确保y2不大于src的高度
-//        // 确保裁剪区域是有效的
-//        if (x1 < x2 && y1 < y2) {
-//            faceMat = src(cv::Rect(box.x1, box.y1, box.x2 - box.x1, box.y2 - box.y1));
-//            cv::resize(faceMat, faceMat, cv::Size(224, 224));
-//            cv::imwrite("/sdcard/DCIM/Camera/face.jpg", faceMat);
-//        }
-//    }
-
     LOGD("ncnn Detect confidence = %f", confidence);
     LOGD("ncnn Detect cost = %lld ms ", duration_ms);
     return confidence;

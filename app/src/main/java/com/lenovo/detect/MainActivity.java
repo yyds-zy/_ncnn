@@ -148,20 +148,20 @@ public class MainActivity extends AppCompatActivity {
                             Log.d("xuezhiyuan", "活体检测耗时：" + time + " ms");
                             Log.d("xuezhiyuan1", "confidence：" + confidence);
 
-                            if (confidence >= Threshold) {
-                                mFaceTv.setText("真脸");
-                            } else {
-                                mFaceTv.setText("假脸");
-                            }
+//                            if (confidence >= Threshold) {
+//                                mFaceTv.setText("真脸");
+//                            } else {
+//                                mFaceTv.setText("假脸");
+//                            }
 
-                            if (confidence >= Threshold) {
+                            //if (confidence >= Threshold) {
                                 rectView.setX1(SIZE_WIDTH - left);
                                 rectView.setX2(SIZE_WIDTH - right);
                                 rectView.setY1(top);
                                 rectView.setY2(bottom);
                                 rectView.setConfidence(confidence);
                                 rectView.invalidate();
-                            }
+                            //}
                         } else {
                             mFaceTv.setVisibility(View.GONE);
                             rectView.setVisibility(View.GONE);
