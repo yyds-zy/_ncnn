@@ -32,7 +32,7 @@ bool cmpArea(Bbox lsh, Bbox rsh) {
         return true;
 }
 
-bool MTCNN::init(AAssetManager* assetManager) {
+bool MTCNN::init(AAssetManager* assetManager, std::vector<ModelConfig> &configs) {
     LOGD("MTCNN, mtcnn =%s =%d", "model loading", binited);
     if (binited)
         release();
@@ -43,6 +43,30 @@ bool MTCNN::init(AAssetManager* assetManager) {
     Onet.load_param(assetManager, "face/det3.param");
     Onet.load_model(assetManager, "face/det3.bin");
     LOGD("MTCNN, mtcnn =%s", "model load suceess");
+    Anet.load_param(assetManager, "age/age_v2.param");
+    Anet.load_model(assetManager, "age/age_v2.bin");
+
+
+    configs_ = configs;
+    model_num_ = static_cast<int>(configs_.size());
+    for (int i = 0; i < model_num_; ++i) {
+        ncnn::Net *net = new ncnn::Net();
+        std::string param = "live/" + configs_[i].name + ".param";
+        std::string model = "live/" + configs_[i].name + ".bin";
+        int ret = net->load_param(assetManager, param.c_str());
+        if (ret != 0) {
+            LOG_ERR("LiveBody load param failed.");
+            return -2 * (i) - 1;
+        }
+
+        ret = net->load_model(assetManager, model.c_str());
+        if (ret != 0) {
+            LOG_ERR("LiveBody load model failed.");
+            return -2 * (i + 1);
+        }
+        nets_.emplace_back(net);
+    }
+
     binited = true;
     return !binited;
 }
@@ -56,6 +80,13 @@ void MTCNN::release() {
     Pnet.clear();
     Rnet.clear();
     Onet.clear();
+    Anet.clear();
+
+    for (int i = 0; i < nets_.size(); ++i) {
+        nets_[i]->clear();
+        delete nets_[i];
+    }
+    nets_.clear();
 }
 
 void MTCNN::SetMinFace(int minSize) {
@@ -471,18 +502,110 @@ void MTCNN::detectMaxFace(ncnn::Mat &img_, std::vector<Bbox> &finalBbox) {
 }
 
 
-void MTCNN::drawDetection(cv::Mat &img, std::vector<Bbox> &box) {
-    const int num_box = box.size();
-    std::vector<cv::Rect> bbox;
-    bbox.resize(num_box);
-    for (int i = 0; i < num_box; i++) {
-        bbox[i] = cv::Rect(box[i].x1, box[i].y1, box[i].x2 - box[i].x1 + 1,
-                           box[i].y2 - box[i].y1 + 1);
-        for (int j = 0; j < 5; j = j + 1) {
-            cv::circle(img, cv::Point(box[i].ppoint[j], box[i].ppoint[j + 5]), 2, {255, 0, 0});
+
+int MTCNN::detectAge(ncnn::Mat &img_) {
+    ncnn_img = img_;
+    // 设置输入  年龄检测模型 2.0
+    ncnn::Extractor ex = Anet.create_extractor();
+    ex.input("input.1", ncnn_img);
+    // 执行推理
+    ncnn::Mat out;
+    ex.extract("664", out);
+    const float* data = out.row(0);
+    float result = data[0];
+    int age = 0;
+    if (data != nullptr) {
+        age = static_cast<int>(result);
+        LOG_ERR("FaceDetector xuezhiyuan  age  %d  ", age);
+    }
+    return age;
+}
+
+float MTCNN::detectLive(cv::Mat &src, FaceBox &box) {
+    auto start = std::chrono::high_resolution_clock::now();
+
+    float confidence = 0.f;
+    for (int i = 0; i < model_num_; i++) {
+        cv::Mat roi;
+        if(configs_[i].org_resize) {
+            cv::resize(src, roi, cv::Size(configs_[i].width, configs_[i].height));
+        } else {
+            cv::Rect rect = CalculateBox(box, src.cols, src.rows, configs_[i]);
+            // roi resize
+            cv::resize(src(rect), roi, cv::Size(configs_[i].width, configs_[i].height));
         }
+
+        ncnn::Mat in = ncnn::Mat::from_pixels(roi.data, ncnn::Mat::PIXEL_BGR, roi.cols, roi.rows);
+
+        // inference
+        ncnn::Extractor extractor = nets_[i]->create_extractor();
+        extractor.set_light_mode(true);
+        extractor.set_num_threads(2);
+
+        extractor.input(net_input_name_.c_str(), in);
+        ncnn::Mat out;
+        extractor.extract(net_output_name_.c_str(), out);
+
+        confidence += out.row(0)[1];
     }
-    for (const auto &rect: bbox) {
-        cv::rectangle(img, rect, cv::Scalar(255, 0, 0), 2);
+    confidence /= model_num_;
+
+    box.confidence = confidence;
+
+    auto detectEnd = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(detectEnd - start);
+    long long duration_ms = duration.count() / 1000;
+    LOGD("ncnn Detect confidence = %f", confidence);
+    LOGD("ncnn Detect cost = %lld ms ", duration_ms);
+    return confidence;
+}
+
+cv::Rect MTCNN::CalculateBox(FaceBox &box, int w, int h, ModelConfig &config) {
+    int x = static_cast<int>(box.x1);
+    int y = static_cast<int>(box.y1);
+    int box_width = static_cast<int>(box.x2 - box.x1 + 1);
+    int box_height = static_cast<int>(box.y2 - box.y1 + 1);
+
+    int shift_x = static_cast<int>(box_width * config.shift_x);
+    int shift_y = static_cast<int>(box_height * config.shift_y);
+
+    float scale = std::min(
+            config.scale,
+            std::min((w - 1) / (float) box_width, (h - 1) / (float) box_height)
+    );
+
+    int box_center_x = box_width / 2 + x;
+    int box_center_y = box_height / 2 + y;
+
+    int new_width = static_cast<int>(box_width * scale);
+    int new_height = static_cast<int>(box_height * scale);
+
+    int left_top_x = box_center_x - new_width / 2 + shift_x;
+    int left_top_y = box_center_y - new_height / 2 + shift_y;
+    int right_bottom_x = box_center_x + new_width / 2 + shift_x;
+    int right_bottom_y = box_center_y + new_height / 2 + shift_y;
+
+    if (left_top_x < 0) {
+        right_bottom_x -= left_top_x;
+        left_top_x = 0;
     }
+
+    if (left_top_y < 0) {
+        right_bottom_y -= left_top_y;
+        left_top_y = 0;
+    }
+
+    if (right_bottom_x >= w) {
+        int s = right_bottom_x - w + 1;
+        left_top_x -= s;
+        right_bottom_x -= s;
+    }
+
+    if (right_bottom_y >= h) {
+        int s = right_bottom_y - h + 1;
+        left_top_y -= s;
+        right_bottom_y -= s;
+    }
+
+    return cv::Rect(left_top_x, left_top_y, new_width, new_height);
 }

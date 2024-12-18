@@ -8,10 +8,11 @@ public class DetectionResult {
     private float confidence;
     private long time;
     private boolean hasFace;
+    private int age;
 
     public DetectionResult(){}
 
-    public DetectionResult(int left, int top, int right, int bottom, float confidence, long time, boolean hasFace) {
+    public DetectionResult(int left, int top, int right, int bottom, float confidence, long time, boolean hasFace, int age) {
         this.left = left;
         this.top = top;
         this.right = right;
@@ -19,6 +20,7 @@ public class DetectionResult {
         this.confidence = confidence;
         this.time = time;
         this.hasFace = hasFace;
+        this.age = age;
     }
 
     public int getLeft() {
@@ -75,5 +77,13 @@ public class DetectionResult {
 
     public void setHasFace(boolean hasFace) {
         this.hasFace = hasFace;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
     }
 }

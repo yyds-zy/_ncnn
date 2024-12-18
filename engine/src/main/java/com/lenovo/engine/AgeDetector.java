@@ -29,7 +29,7 @@ public class AgeDetector extends Component {
         if (bitmap == null) {
         //if (bitmap.getConfig() == Bitmap.Config.ARGB_8888) {
             long start_1 = System.currentTimeMillis();
-            int age = nativeDetectBitmap(bitmap);
+            int age = nativeDetectAge(bitmap);
             Log.d("AgeDetector", "检测年龄：" + age);
             long end_1 = System.currentTimeMillis();
             long time_1 = end_1 - start_1;
@@ -52,5 +52,5 @@ public class AgeDetector extends Component {
 
     private native int nativeLoadModel(AssetManager assetManager);
 
-    private native int nativeDetectBitmap(Bitmap bitmap);
+    private native int nativeDetectAge(Bitmap bitmap);
 }

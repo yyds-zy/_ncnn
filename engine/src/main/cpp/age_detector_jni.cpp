@@ -39,7 +39,7 @@ AGE_DETECTOR_METHOD(nativeLoadModel)(JNIEnv *env, jobject instance, jobject asse
 
 
 JNIEXPORT jint JNICALL
-AGE_DETECTOR_METHOD(nativeDetectBitmap)(JNIEnv *env, jobject instance, jobject bitmap);
+AGE_DETECTOR_METHOD(nativeDetectAge)(JNIEnv *env, jobject instance, jobject bitmap);
 
 }
 
@@ -67,7 +67,7 @@ AGE_DETECTOR_METHOD(nativeLoadModel)(JNIEnv *env, jobject instance, jobject asse
 }
 
 JNIEXPORT jint JNICALL
-AGE_DETECTOR_METHOD(nativeDetectBitmap)(JNIEnv *env, jobject instance, jobject bitmap) {
+AGE_DETECTOR_METHOD(nativeDetectAge)(JNIEnv *env, jobject instance, jobject bitmap) {
     LOGD("AgeDetector, ageDetector =  --------------------------- nativeDetectBitmap  ------------------------------------- ");
     return 0;
 }

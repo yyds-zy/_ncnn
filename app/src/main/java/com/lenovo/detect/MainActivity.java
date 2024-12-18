@@ -29,8 +29,6 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.provider.Settings;
 import android.util.Log;
-import android.util.SparseIntArray;
-import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -143,6 +141,7 @@ public class MainActivity extends AppCompatActivity {
                             int right = detect.getRight();
                             int bottom = detect.getBottom();
                             float confidence = detect.getConfidence();
+                            int age = detect.getAge();
                             long time = detect.getTime();
                             Log.d(TAG, "活体检测耗时：" + time + " ms");
                             if (confidence >= Threshold) {
@@ -155,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
                                 rectView.setX2(SIZE_WIDTH - right);
                                 rectView.setY1(top);
                                 rectView.setY2(bottom);
-                                rectView.setConfidence(confidence);
+                                rectView.setConfidence(age);
                                 rectView.invalidate();
                             }
                         } else {

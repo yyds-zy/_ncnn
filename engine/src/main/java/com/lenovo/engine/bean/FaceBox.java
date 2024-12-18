@@ -11,14 +11,17 @@ public class FaceBox {
     private int bottom;
     private float confidence;
 
+    private int age;
+
     public FaceBox() {}
 
-    public FaceBox(int left, int top, int right, int bottom, float confidence) {
+    public FaceBox(int left, int top, int right, int bottom, float confidence, int age) {
         this.left = left;
         this.top = top;
         this.right = right;
         this.bottom = bottom;
         this.confidence = confidence;
+        this.age = age;
     }
 
     public int getLeft() {
@@ -59,5 +62,13 @@ public class FaceBox {
 
     public void setConfidence(float confidence) {
         this.confidence = confidence;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
     }
 }
